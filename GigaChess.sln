@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GigaChess.Api", "GigaChess.Api\GigaChess.Api.csproj", "{FABFA6DE-5733-4E1E-A0C2-FB7512C512E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{3B660BB5-FD58-4F01-BD4B-86D0FB97CA97}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FABFA6DE-5733-4E1E-A0C2-FB7512C512E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FABFA6DE-5733-4E1E-A0C2-FB7512C512E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FABFA6DE-5733-4E1E-A0C2-FB7512C512E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FABFA6DE-5733-4E1E-A0C2-FB7512C512E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  gigachess.api:
+    build:
+      context: .
+      dockerfile: "GigaChess.Api/Dockerfile"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5000:80"
