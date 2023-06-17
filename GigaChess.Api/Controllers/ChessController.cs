@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GigaChess.Api.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GigaChess.Api.Controllers;
 
@@ -7,9 +8,11 @@ namespace GigaChess.Api.Controllers;
 public class ChessController : Controller
 {
     [HttpPost]
+    [ProducesResponseType(typeof(Move), 200)]
     public async Task<IActionResult> RandomMove()
     {
-        
-        return Ok("Good");
+        var move = new Move() { From = "e2", To = "e4" };
+
+        return Ok(move);
     }
 }
