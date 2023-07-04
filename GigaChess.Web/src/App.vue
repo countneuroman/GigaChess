@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
   baseURL: 'http://localhost:5000/'
 });
 
-const worker = new Worker('socketWorker.js')
+const worker = new Worker('./workers/socketWorker.js')
 
 function fetchData() {
   const url = 'Chess';

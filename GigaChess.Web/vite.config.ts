@@ -14,5 +14,16 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        socketWorker: './src/helpers/socketWorker.ts',
+      },
+      output: {
+        dir: 'dist/workers',
+        entryFileNames: '[name].js',
+      },
+    },
+  },
 })
