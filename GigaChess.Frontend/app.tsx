@@ -5,6 +5,10 @@ import { Chessground as ChessgroundApi } from 'chessground';
 import { Api } from 'chessground/api';
 import { Config } from 'chessground/config';
 
+import "chessground/assets/chessground.base.css";
+import "chessground/assets/chessground.brown.css";
+import "chessground/assets/chessground.cburnett.css";
+
 interface Props {
   width?: number
   height?: number
@@ -49,8 +53,6 @@ const App: React.FC = () =>  {
       </div>
     );
   };
-
-export default App;
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(<App />);
