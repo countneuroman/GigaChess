@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, createContext, useContext } from 'react';
 import ReactDOM from 'react-dom/client'
 import { Chessground as ChessgroundApi } from 'chessground';
 
@@ -8,6 +8,16 @@ import { Config } from 'chessground/config';
 import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
+
+
+const ChessgroundContext = createContext<{
+    api: Api | null;
+    setApi: React.Dispatch<React.SetStateAction<Api | null>>;
+}>({
+    api: null,
+    setApi: () => {},
+});
+
 
 interface Props {
   width?: number
@@ -19,7 +29,7 @@ interface Props {
 function Chessground({
   width = 900, height = 900, config = {}, contained = false,
 }: Props) {
-  const [api, setApi] = useState<Api | null>(null);
+  const { api, setApi } = useContext(ChessgroundContext);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,19 +50,39 @@ function Chessground({
   }, [api, config]);
 
   return (
-    <div style={{ height: contained ? '100%' : height, width: contained ? '100%' : width }}>
-      <div ref={ref} style={{ height: '100%', width: '100%', display: 'table' }} />
-    </div>
+        <div style={{ height: contained ? '100%' : height, width: contained ? '100%' : width }}>
+            <div ref={ref} style={{ height: '100%', width: '100%', display: 'table' }} />
+        </div>
   );
 }
 
-const App: React.FC = () =>  {
+const ResetBoard = () => {
+    const { api } = useContext(ChessgroundContext);
+    
+    const handleReset = () => {
+        if (api) {
+            api.set({
+                fen: 'start',
+            });
+        }
+    };
+
     return (
-      <div>
-        <Chessground width={900} height={900} contained={false} />
-      </div>
+        <button onClick={handleReset}>Reset Position</button>
     );
-  };
+}
+
+const App: React.FC = () => {
+    const [api, setApi] = useState<Api | null>(null);
+    return (
+        <ChessgroundContext.Provider value={{ api, setApi }}>
+            <div>
+            <Chessground width={900} height={900} contained={false}/>
+            <ResetBoard />
+            </div>
+        </ChessgroundContext.Provider>
+    );
+};
 
 const root = ReactDOM.createRoot(document.getElementById('board') as HTMLElement);
 root.render(<App />);
