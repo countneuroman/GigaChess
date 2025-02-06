@@ -8,6 +8,7 @@ import { Config } from 'chessground/config';
 import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
+import {Piece} from "chessground/src/types";
 
 const ChessgroundContext = createContext<{
     api: Api | null;
@@ -16,6 +17,25 @@ const ChessgroundContext = createContext<{
     api: null,
     setApi: () => {},
 });
+
+
+const sendPiecePosition = async(piece: Piece, pos: string) => {
+    console.log("Фигура: " + piece.color + " " + piece.role + " на клетке " + pos);
+    //TODO: передавать адрес бэка не хардкодом
+    const response = await fetch('http://localhost:7130/api/Chess/GetPiecePostition', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({color: piece.color, role: piece.role, position: pos})
+    });
+    console.log("Статутс ответа: " + response.status)
+    if (response.status === 200) {
+        console.log("Success");
+    } else {
+        console.log("Error: " + response.status);
+    }
+};
 
 interface Props {
   width?: number
@@ -43,7 +63,7 @@ function Chessground({
             select: (pos) => {
                 const piece = chessgroundApi.state.pieces.get(pos);
                 if (piece) {
-                    console.log("Вы нажали на фигуру: " + piece.color + " " + piece.role + " на клетке " + pos);
+                    sendPiecePosition(piece, pos);
                 } else {
                     console.log(`Выбрана пустая клетка: ${pos}`);
                 }

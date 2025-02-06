@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   gigachess.api:
     build:
@@ -8,4 +6,4 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5000:80"
+      - "7130:8080"
