@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom/client'
 import { Chessground as ChessgroundApi } from 'chessground';
 
 import { Api } from 'chessground/api';
-import { Config } from 'chessground/config';
+import { Config } from 'chessground/config';    
 
 import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
-
 
 const ChessgroundContext = createContext<{
     api: Api | null;
@@ -18,7 +17,6 @@ const ChessgroundContext = createContext<{
     setApi: () => {},
 });
 
-
 interface Props {
   width?: number
   height?: number
@@ -27,7 +25,11 @@ interface Props {
 }
 
 function Chessground({
-  width = 900, height = 900, config = {}, contained = false,
+  width = 900,
+  height = 900, 
+  config = {
+  },
+  contained = false,
 }: Props) {
   const { api, setApi } = useContext(ChessgroundContext);
 
@@ -37,6 +39,16 @@ function Chessground({
     if (ref && ref.current && !api) {
       const chessgroundApi = ChessgroundApi(ref.current, {
         animation: { enabled: true, duration: 200 },
+        events: {
+            select: (pos) => {
+                const piece = chessgroundApi.state.pieces.get(pos);
+                if (piece) {
+                    console.log("Вы нажали на фигуру: " + piece.color + " " + piece.role + " на клетке " + pos);
+                } else {
+                    console.log(`Выбрана пустая клетка: ${pos}`);
+                }
+            }
+        },
         ...config,
       });
       setApi(chessgroundApi);
@@ -48,7 +60,7 @@ function Chessground({
   useEffect(() => {
     api?.set(config);
   }, [api, config]);
-
+  
   return (
         <div style={{ height: contained ? '100%' : height, width: contained ? '100%' : width }}>
             <div ref={ref} style={{ height: '100%', width: '100%', display: 'table' }} />
