@@ -49,10 +49,10 @@ function Chessground({
 const App: React.FC = () =>  {
     return (
       <div>
-        <Chessground width={600} height={600} contained={false} />
+        <Chessground width={900} height={900} contained={false} />
       </div>
     );
   };
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(document.getElementById('board') as HTMLElement);
 root.render(<App />);
