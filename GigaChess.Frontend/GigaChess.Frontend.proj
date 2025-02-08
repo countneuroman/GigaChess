@@ -10,7 +10,10 @@
         <Content Include="*.tsx" />
         <Content Include="*.d.ts" />
         <Content Include="*.less" />
+        <Content Include="*.conf" />
         <None Include="*.json" />
+        <None Include=".dockerignore" />
+        <None Include="Dockerfile" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,11 +32,5 @@
             Inputs="@(Content)"
             Outputs="bin\index.html">
         <Exec Command="npm run build" />
-    </Target>
-
-    <Target Name="NpmStart" BeforeTargets="Build"
-            Inputs="@(Content)"
-            Outputs="bin\index.html">
-        <Exec Command="npm run start" />
     </Target>
 </Project>

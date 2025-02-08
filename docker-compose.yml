@@ -7,3 +7,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "7130:8080"
+        
+  gigachess.frontend:
+    build:
+      context: .
+      dockerfile: "GigaChess.Frontend/Dockerfile"
+    ports:
+      - "8080:8080"
