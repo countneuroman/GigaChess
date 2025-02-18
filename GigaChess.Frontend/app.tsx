@@ -18,11 +18,10 @@ const ChessgroundContext = createContext<{
     setApi: () => {},
 });
 
-
-const sendPiecePosition = async(piece: Piece, pos: string) => {
+const getLegalMoves = async(piece: Piece, pos: string) => {
     console.log("Фигура: " + piece.color + " " + piece.role + " на клетке " + pos);
     //TODO: передавать адрес бэка не хардкодом
-    const response = await fetch('http://localhost:7130/api/Chess/GetPiecePostition', {
+    const response = await fetch('http://localhost:7130/api/Chess/GetLegalMovies', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,9 +31,12 @@ const sendPiecePosition = async(piece: Piece, pos: string) => {
     console.log("Статутс ответа: " + response.status)
     if (response.status === 200) {
         console.log("Success");
+        return await response.json();
     } else {
         console.log("Error: " + response.status);
+        return []
     }
+
 };
 
 interface Props {
@@ -60,10 +62,18 @@ function Chessground({
       const chessgroundApi = ChessgroundApi(ref.current, {
         animation: { enabled: true, duration: 200 },
         events: {
-            select: (pos) => {
+            select: async (pos) => {
                 const piece = chessgroundApi.state.pieces.get(pos);
                 if (piece) {
-                    sendPiecePosition(piece, pos);
+                    const moves: string[] = await getLegalMoves(piece, pos);
+                    const legalMoves = new Map([
+                        [pos, moves]
+                        ])
+                    chessgroundApi.set({
+                        movable: {
+                            free: false,
+                            dests: legalMoves
+                    }});
                 } else {
                     console.log(`Выбрана пустая клетка: ${pos}`);
                 }
@@ -80,6 +90,8 @@ function Chessground({
   useEffect(() => {
     api?.set(config);
   }, [api, config]);
+  
+  
   
   return (
         <div style={{ height: contained ? '100%' : height, width: contained ? '100%' : width }}>
