@@ -9,6 +9,8 @@ services:
       dockerfile: "GigaChess.Api/Dockerfile"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - OTEL_SERVICE_NAME=GigaChess.Api
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317/
     ports:
       - "7130:8080"
         
