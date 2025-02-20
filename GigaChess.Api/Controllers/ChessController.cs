@@ -1,4 +1,5 @@
 ﻿using GigaChess.Api.Models;
+using GigaChess.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GigaChess.Api.Controllers;
@@ -7,10 +8,12 @@ namespace GigaChess.Api.Controllers;
 [ApiController]
 public class ChessController : Controller
 {
-    public readonly ILogger<ChessController> _Logger;
-    public ChessController(ILogger<ChessController> logger)
+    private readonly ILogger<ChessController> _logger;
+    private readonly ChessService _chess;
+    public ChessController(ILogger<ChessController> logger, ChessService chess)
     {
-        _Logger = logger;
+        _logger = logger;
+        _chess = chess;
     }
     
     [HttpPost]
@@ -23,10 +26,11 @@ public class ChessController : Controller
     }
     
     [HttpPost]
-    [Route("GetPiecePostition")]
-    public async Task<IActionResult> GetPiecePostition(Piece piece)
+    [Route("GetLegalMovies")]
+    public async Task<IActionResult> GetLegalMovies(Piece piece)
     {
-        _Logger.LogInformation($"Piece color: {piece.Color}, piece role: {piece.Role}, piece position: {piece.Position}");
-        return Ok();
+        _logger.LogInformation($"Piece color: {piece.Color}, piece role: {piece.Role}, piece position: {piece.Position}");
+        var legalMoves = await _chess.GetLogalMovies(piece);
+        return Ok(legalMoves);
     }
 }

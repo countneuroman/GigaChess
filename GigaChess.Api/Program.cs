@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using GigaChess.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<ChessService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
