@@ -12,14 +12,13 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<ChessService>();
-
 builder.Services.AddOpenTelemetry()
     .UseOtlpExporter()   
     .WithTracing(tracing  =>tracing 
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation());
 
+builder.Services.AddScoped<ChessService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

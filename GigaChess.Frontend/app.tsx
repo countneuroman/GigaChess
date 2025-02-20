@@ -21,7 +21,7 @@ const ChessgroundContext = createContext<{
 const getLegalMoves = async(piece: Piece, pos: string) => {
     console.log("Фигура: " + piece.color + " " + piece.role + " на клетке " + pos);
     //TODO: передавать адрес бэка не хардкодом
-    const response = await fetch('http://localhost:7130/api/Chess/GetLegalMovies', {
+    const response = await fetch('http://localhost:8080/api/Chess/GetLegalMovies', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
