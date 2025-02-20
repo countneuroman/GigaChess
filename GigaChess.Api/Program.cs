@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using OpenTelemetry;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,13 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddOpenTelemetry()
+    .UseOtlpExporter()   
+    .WithTracing(tracing  =>tracing 
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation());
+
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
