@@ -11,6 +11,7 @@
 *.userosscache
 *.sln.docstates
 .vscode/
+.claude/settings.local.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
