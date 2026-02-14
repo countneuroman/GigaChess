@@ -1,0 +1,4 @@
+repos:
+  primary: "."
+  additional:
+    - "C:\\Users\\olori\\.beads-planning"
