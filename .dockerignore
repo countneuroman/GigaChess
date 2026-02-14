@@ -1,4 +1,4 @@
-﻿**/.dockerignore
+**/.dockerignore
 **/.env
 **/.git
 **/.gitignore
@@ -8,6 +8,8 @@
 **/.vs
 **/.vscode
 **/.idea
+**/.claude
+**/.beads
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm

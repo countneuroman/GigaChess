@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState, createContext, useContext } from 'react';
 import ReactDOM from 'react-dom/client'
-import { Chessground as ChessgroundApi } from 'chessground';
+import { Chessground as ChessgroundApi } from '@lichess-org/chessground';
 
-import { Api } from 'chessground/api';
-import { Config } from 'chessground/config';    
+import { Api } from '@lichess-org/chessground/dist/api';
+import { Config } from '@lichess-org/chessground/dist/config';
 
-import "chessground/assets/chessground.base.css";
-import "chessground/assets/chessground.brown.css";
-import "chessground/assets/chessground.cburnett.css";
-import {Piece} from "chessground/src/types";
+import "@lichess-org/chessground/assets/chessground.base.css";
+import "@lichess-org/chessground/assets/chessground.brown.css";
+import "@lichess-org/chessground/assets/chessground.cburnett.css";
+import {Piece} from "@lichess-org/chessground/dist/types";
 
 const ChessgroundContext = createContext<{
     api: Api | null;

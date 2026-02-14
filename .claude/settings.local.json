@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(bd:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(git commit:*)",
+      "Bash(npm view:*)",
+      "Bash(dotnet package search:*)",
+      "Bash(dotnet build:*)",
+      "Bash(npm run build:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm install:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)"
     ]
   }
 }

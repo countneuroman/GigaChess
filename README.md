@@ -10,7 +10,7 @@
 | Слой           | Технологии                                      |
 |----------------|--------------------------------------------------|
 | **Frontend**   | React 19, TypeScript, Chessground, Parcel, LESS  |
-| **Backend**    | .NET 9, ASP.NET Core, OpenAPI                    |
+| **Backend**    | .NET 10, ASP.NET Core, OpenAPI                   |
 | **Инфраструктура** | Docker, Docker Compose, Nginx (reverse proxy) |
 | **Observability**  | OpenTelemetry, Jaeger                         |
 
