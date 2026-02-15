@@ -1,4 +1,8 @@
+using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
+using GigaChess.Api.Engine;
+using GigaChess.Api.Models;
+using GigaChess.Api.Services;
 using OpenTelemetry;
 using OpenTelemetry.Trace;
 
@@ -9,6 +13,10 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+builder.Services.AddSingleton<IChessEngine, StubChessEngine>();
+builder.Services.AddSingleton<ConcurrentDictionary<string, GameState>>();
+builder.Services.AddSingleton<GameService>();
 
 builder.Services.AddOpenApi();
 
