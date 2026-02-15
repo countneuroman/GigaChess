@@ -14,7 +14,7 @@ RUN apt update && apt install -y nginx-module-otel
 
 EXPOSE 8080
 
-FROM node:22 AS build
+FROM node:24 AS build
 WORKDIR /src
 COPY GigaChess.Frontend/ GigaChess.Frontend/
 WORKDIR "/src/GigaChess.Frontend"
