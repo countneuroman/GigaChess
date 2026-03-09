@@ -11,7 +11,10 @@
       "WebFetch(domain:github.com)",
       "Bash(npm install:*)",
       "Bash(ls:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(docker build:*)",
+      "Bash(dotnet run:*)",
+      "Bash(dotnet test:*)"
     ]
   }
 }
