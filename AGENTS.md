@@ -23,6 +23,14 @@ bd search "текст"     # Поиск по задачам
 - Закрывай задачи (`bd close`) по завершении работы над ними.
 - После закрытия задачи — делай коммит в git (без push в remote).
 
+## Starting a Session
+
+**При начале новой сессии** ВСЕГДА выполняй следующее, прежде чем приступать к работе:
+
+1. **Проверь последние коммиты** — `git log --oneline -10`
+2. **Проверь состояние задач** — `bd list --all`
+3. **Кратко сообщи пользователю** — что было сделано в прошлый раз и какие задачи следующие
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
