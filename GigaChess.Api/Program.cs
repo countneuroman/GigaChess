@@ -14,7 +14,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddSingleton<IChessEngine, StubChessEngine>();
+builder.Services.AddSingleton<IChessEngine, ChessEngine>();
 builder.Services.AddSingleton<ConcurrentDictionary<string, GameState>>();
 builder.Services.AddSingleton<GameService>();
 

@@ -34,6 +34,30 @@ public class GameService
         return _games.TryGetValue(gameId, out var state) ? ToResponse(state) : null;
     }
 
+    public Result<List<Move>> GetLegalMoves(GetLegalMovesRequest request)
+    {
+        if (!_games.TryGetValue(request.GameId, out var state))
+            return Result<List<Move>>.NotFound("Game not found.");
+
+        var moves = _engine.GetLegalMoves(state, state.ActiveColor);
+
+        if (request.Square != null)
+        {
+            try
+            {
+                BoardHelper.SquareToIndices(request.Square);
+            }
+            catch (ArgumentException)
+            {
+                return Result<List<Move>>.Fail("Invalid square notation.");
+            }
+
+            moves = moves.Where(m => m.From == request.Square).ToList();
+        }
+
+        return Result<List<Move>>.Ok(moves);
+    }
+
     public Result<GameStateResponse> MakeMove(MakeMoveRequest request)
     {
         if (!_games.TryGetValue(request.GameId, out var state))

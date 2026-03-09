@@ -14,7 +14,7 @@ public class GameServiceTests
 
     public GameServiceTests()
     {
-        _service = new GameService(_games, new StubChessEngine());
+        _service = new GameService(_games, new ChessEngine());
     }
 
     private string CreateGame()
@@ -357,10 +357,10 @@ public class GameServiceTests
         var gameId = CreateGame();
         var state = _games[gameId];
         state.HalfmoveClock = 10;
-        // Place black piece for white to capture
-        state.Board[5, 4] = "bP"; // e3
+        // Place black piece on d3 for white pawn on e2 to capture diagonally
+        state.Board[5, 3] = "bP"; // d3
 
-        Move(gameId, "e2", "e3"); // pawn captures (also pawn move)
+        Move(gameId, "e2", "d3"); // pawn captures diagonally
 
         Assert.Equal(0, state.HalfmoveClock);
     }
@@ -400,9 +400,9 @@ public class GameServiceTests
         state.Board = new string[8, 8];
         state.Board[7, 4] = "wK";
         state.Board[0, 4] = "bK";
-        state.Board[5, 4] = "bP"; // one pawn for White to capture
+        state.Board[6, 5] = "bP"; // pawn on f2 for king to capture diagonally
 
-        Move(gameId, "e1", "e3"); // king captures pawn → K vs K
+        Move(gameId, "e1", "f2"); // king captures pawn → K vs K
 
         Assert.Equal(GameStatus.Draw, state.Status);
     }
@@ -417,11 +417,55 @@ public class GameServiceTests
         state.Board[7, 4] = "wK";
         state.Board[0, 4] = "bK";
         state.Board[7, 2] = "wB";
-        state.Board[5, 4] = "bP"; // capture this to trigger check
+        state.Board[6, 5] = "bP"; // pawn on f2 for king to capture
 
-        Move(gameId, "e1", "e3"); // capture → K+B vs K
+        Move(gameId, "e1", "f2"); // capture → K+B vs K
 
         Assert.Equal(GameStatus.Draw, state.Status);
+    }
+
+    // --- GetLegalMoves ---
+
+    [Fact]
+    public void GetLegalMoves_NewGame_Returns20Moves()
+    {
+        var gameId = CreateGame();
+
+        var result = _service.GetLegalMoves(new GetLegalMovesRequest { GameId = gameId });
+
+        Assert.True(result.Success);
+        Assert.Equal(20, result.Data!.Count);
+    }
+
+    [Fact]
+    public void GetLegalMoves_WithSquare_FiltersToThatPiece()
+    {
+        var gameId = CreateGame();
+
+        var result = _service.GetLegalMoves(new GetLegalMovesRequest { GameId = gameId, Square = "e2" });
+
+        Assert.True(result.Success);
+        Assert.Equal(2, result.Data!.Count); // e3 and e4
+        Assert.All(result.Data, m => Assert.Equal("e2", m.From));
+    }
+
+    [Fact]
+    public void GetLegalMoves_NonExistentGame_ReturnsNotFound()
+    {
+        var result = _service.GetLegalMoves(new GetLegalMovesRequest { GameId = "missing" });
+
+        Assert.True(result.IsNotFound);
+    }
+
+    [Fact]
+    public void GetLegalMoves_InvalidSquare_Fails()
+    {
+        var gameId = CreateGame();
+
+        var result = _service.GetLegalMoves(new GetLegalMovesRequest { GameId = gameId, Square = "z9" });
+
+        Assert.False(result.Success);
+        Assert.Contains("Invalid square", result.Error);
     }
 
     // --- Finished game ---

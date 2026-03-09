@@ -32,6 +32,20 @@ public class GameController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("LegalMoves")]
+    public IActionResult GetLegalMoves([FromBody] GetLegalMovesRequest request)
+    {
+        var result = _gameService.GetLegalMoves(request);
+
+        if (result.IsNotFound)
+            return NotFound(new { result.Error });
+
+        if (!result.Success)
+            return BadRequest(new { result.Error });
+
+        return Ok(result.Data);
+    }
+
     [HttpPost("Move")]
     public IActionResult MakeMove([FromBody] MakeMoveRequest request)
     {
