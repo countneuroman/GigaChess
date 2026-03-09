@@ -17,10 +17,31 @@
 
 
 
-## Запуск
+## Структура проекта
+
+```
+GigaChess.Api/            — Backend
+  Controllers/            — HTTP API
+  Services/               — Бизнес-логика
+  Engine/                 — Шахматный движок
+  Models/                 — GameState, DTOs, enums
+  Helpers/                — BoardHelper (FEN, нотация)
+  Common/                 — Общие утилиты (Result<T>)
+GigaChess.Api.Tests/      — xUnit тесты
+GigaChess.Frontend/       — React SPA (Chessground + Parcel)
+```
+
+## Сборка и тестирование
 
 ```bash
+# Запуск всего через Docker
 docker-compose up --build
+
+# Backend тесты
+dotnet test GigaChess.Api.Tests/GigaChess.Api.Tests.csproj
+
+# Frontend dev server (из GigaChess.Frontend/)
+npm start
 ```
 
 | Сервис    | URL                        |

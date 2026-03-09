@@ -1,16 +1,27 @@
-# Agent Instructions
+# AGENTS.md — GigaChess
 
 This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
 
-## Quick Reference
+Структура проекта, стек и команды сборки — см. [README.md](README.md).
+Архитектурные паттерны и детали реализации — см. [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Issue tracker (beads)
 
 ```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --status in_progress  # Claim work
-bd close <id>         # Complete work
-bd sync               # Sync with git
+bd ready              # Найти доступную работу
+bd show <id>          # Детали задачи
+bd update <id> --status in_progress  # Взять задачу
+bd close <id>         # Закрыть задачу
+bd sync               # Синхронизация с git
+bd list               # Список задач
+bd create -t "Title" -d "..."  # Создать задачу
+bd children <id>      # Подзадачи эпика
+bd search "текст"     # Поиск по задачам
 ```
+
+**Правила:**
+- Закрывай задачи (`bd close`) по завершении работы над ними.
+- После закрытия задачи — делай коммит в git (без push в remote).
 
 ## Landing the Plane (Session Completion)
 
@@ -38,3 +49,9 @@ bd sync               # Sync with git
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
 
+## Конвенции для агентов
+
+- **Не использовать `cd`** — рабочая директория уже правильная
+- **Не добавлять `2>&1`** к командам без явной необходимости
+- **Предпочитать тесты** вместо ручного запуска сервера для верификации
+- **Не использовать `-C` флаг** в git-командах — уже в нужной директории
