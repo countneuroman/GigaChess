@@ -8,35 +8,41 @@ import { Config } from '@lichess-org/chessground/dist/config';
 import "@lichess-org/chessground/assets/chessground.base.css";
 import "@lichess-org/chessground/assets/chessground.brown.css";
 import "@lichess-org/chessground/assets/chessground.cburnett.css";
-import {Piece} from "@lichess-org/chessground/dist/types";
+
+const API_BASE = 'http://localhost:7130';
 
 const ChessgroundContext = createContext<{
     api: Api | null;
     setApi: React.Dispatch<React.SetStateAction<Api | null>>;
+    gameId: string | null;
+    setGameId: React.Dispatch<React.SetStateAction<string | null>>;
 }>({
     api: null,
     setApi: () => {},
+    gameId: null,
+    setGameId: () => {},
 });
 
-const getLegalMoves = async(piece: Piece, pos: string) => {
-    console.log("Фигура: " + piece.color + " " + piece.role + " на клетке " + pos);
-    //TODO: передавать адрес бэка не хардкодом
-    const response = await fetch('http://localhost:7130/api/Chess/GetLegalMovies', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({color: piece.color, role: piece.role, position: pos})
-    });
-    console.log("Статутс ответа: " + response.status)
-    if (response.status === 200) {
-        console.log("Success");
-        return await response.json();
-    } else {
-        console.log("Error: " + response.status);
-        return []
+const createGame = async (): Promise<{ gameId: string; fen: string } | null> => {
+    const response = await fetch(`${API_BASE}/api/Game/New`, { method: 'POST' });
+    if (response.ok) {
+        const data = await response.json();
+        return { gameId: data.gameId, fen: data.fen };
     }
+    return null;
+};
 
+const getLegalMoves = async (gameId: string, square: string): Promise<string[]> => {
+    const response = await fetch(`${API_BASE}/api/Game/LegalMoves`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gameId, square }),
+    });
+    if (response.ok) {
+        const moves: { from: string; to: string }[] = await response.json();
+        return moves.map(m => m.to);
+    }
+    return [];
 };
 
 interface Props {
@@ -53,7 +59,10 @@ function Chessground({
   },
   contained = false,
 }: Props) {
-  const { api, setApi } = useContext(ChessgroundContext);
+  const { api, setApi, gameId } = useContext(ChessgroundContext);
+
+  const gameIdRef = useRef(gameId);
+  useEffect(() => { gameIdRef.current = gameId; }, [gameId]);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -63,19 +72,16 @@ function Chessground({
         animation: { enabled: true, duration: 200 },
         events: {
             select: async (pos) => {
+                const currentGameId = gameIdRef.current;
+                if (!currentGameId) return;
                 const piece = chessgroundApi.state.pieces.get(pos);
                 if (piece) {
-                    const moves: string[] = await getLegalMoves(piece, pos);
-                    const legalMoves = new Map([
-                        [pos, moves]
-                        ])
+                    const moves = await getLegalMoves(currentGameId, pos);
                     chessgroundApi.set({
                         movable: {
                             free: false,
-                            dests: legalMoves
+                            dests: new Map([[pos, moves]]),
                     }});
-                } else {
-                    console.log(`Выбрана пустая клетка: ${pos}`);
                 }
             }
         },
@@ -101,13 +107,13 @@ function Chessground({
 }
 
 const ResetBoard = () => {
-    const { api } = useContext(ChessgroundContext);
-    
-    const handleReset = () => {
-        if (api) {
-            api.set({
-                fen: 'start',
-            });
+    const { api, setGameId } = useContext(ChessgroundContext);
+
+    const handleReset = async () => {
+        const game = await createGame();
+        if (game && api) {
+            setGameId(game.gameId);
+            api.set({ fen: game.fen });
         }
     };
 
@@ -118,8 +124,20 @@ const ResetBoard = () => {
 
 const App: React.FC = () => {
     const [api, setApi] = useState<Api | null>(null);
+    const [gameId, setGameId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!api) return;
+        createGame().then(game => {
+            if (game) {
+                setGameId(game.gameId);
+                api.set({ fen: game.fen });
+            }
+        });
+    }, [api]);
+
     return (
-        <ChessgroundContext.Provider value={{ api, setApi }}>
+        <ChessgroundContext.Provider value={{ api, setApi, gameId, setGameId }}>
             <div>
             <Chessground width={900} height={900} contained={false}/>
             <ResetBoard />
